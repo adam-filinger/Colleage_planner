@@ -29,7 +29,7 @@ public class Course {
     }
 
     /**
-     * Sets practiceAddedt to true
+     * Sets practiceAdded to true
      */
     public void setPracticeAdded() {
         this.practiceAdded = true;
