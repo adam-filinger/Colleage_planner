@@ -30,55 +30,56 @@ public class Main {
         List<Course> all_courses = new ArrayList<>();
 
         //create courses
-        Course marketing = new Course("3MG216");
-        all_courses.add(marketing);
-        Course database = new Course("4IT102");
-        all_courses.add(database);
-        Course economics = new Course("3MI101");
-        all_courses.add(economics);
+        Course java = new Course("4IT101");
+        all_courses.add(java);
+        Course ucet = new Course("1FU201");
+        all_courses.add(ucet);
+        Course stateg = new Course("3SG201");
+        all_courses.add(stateg);
+        Course sof_in = new Course("4IT115");
+        all_courses.add(sof_in);
+        Course info = new Course("4IZ210");
+        all_courses.add(info);
         EventCreator creator = new EventCreator();
 
         //creating schEvents
         //events for marketing
-        marketing.setSchEvents(creator.createEvents("C:\\Users\\eidam\\OneDrive\\Dokumenty\\table_export.csv", marketing));
+        java.setSchEvents(creator.createEvents("D:\\Download\\4it101.csv", java));
 
         //events for database
-        database.setSchEvents(creator.createEvents("C:\\Users\\eidam\\OneDrive\\Dokumenty\\table_export (2).csv", database));
+        ucet.setSchEvents(creator.createEvents("D:\\Download\\1fu201.csv", ucet));
 
         //events for economics
-        economics.setSchEvents(creator.createEvents("C:\\Users\\eidam\\OneDrive\\Dokumenty\\table_export (1).csv", economics));
+        stateg.setSchEvents(creator.createEvents("D:\\Download\\3sg201.csv", stateg));
+
+        //events for economics
+        sof_in.setSchEvents(creator.createEvents("D:\\Download\\4it115.csv", sof_in));
+
+        //events for economics
+        info.setSchEvents(creator.createEvents("D:\\Download\\4iz210.csv", info));
+
+
 
 
         //creating timetable
         TimeTable timeTable = new TimeTable();
-
-        Day[] daySeq = new Day[5];
 
         List<Rule> rules = new ArrayList<>();
         timeTable.setRules(rules);
         for(Day d : timeTable.getTimeTable()){
             for (Course c : all_courses){
                 for(SchEvent e : c.getSchEvents()){
-                    if(d.getDay().equals(e.getDay())){
+                    if(d.dayOfWeek == e.getDay()){
                         d.numOfEvents++;
                     }
                 }
             }
-            if(d.numOfEvents > daySeq[0].numOfEvents){
-                daySeq[0] = d;
-            } else if (d.numOfEvents > daySeq[1].numOfEvents) {
-                daySeq[1] = d;
-            } else if (d.numOfEvents > daySeq[2].numOfEvents) {
-                daySeq[2] = d;
-            }else if (d.numOfEvents > daySeq[3].numOfEvents) {
-                daySeq[3] = d;
-            }else if (d.numOfEvents > daySeq[2].numOfEvents) {
-                daySeq[3] = d;
-            }else if (d.numOfEvents > daySeq[4].numOfEvents) {
-                daySeq[4] = d;
-            }
-
+            System.out.println("For day: " + d.dayOfWeek + " the number of events is: " + d.numOfEvents);
         }
+
+        bubbleSort(timeTable.timeTable, 5);
+
+
 
         /*
         Naplnit celý timeTable všemi dostupnými rozvrhovými akcemi
@@ -102,6 +103,7 @@ public class Main {
                     System.out.println("..................................");
                     courses_added++;
                 }else{
+                    for(Day d : timeTable.getTimeTable()){
                     for(SchEvent e : c.getSchEvents()){
                         if(e.getType() == 1){
                             if(c.lectureAdded){
@@ -115,7 +117,7 @@ public class Main {
 //                        if (e.getStart().equals(timeTable.getRules().get(0).getTime())) {
 //                            continue;
 //                        }
-                        for(Day d : timeTable.getTimeTable()){
+
                             if(d.dayOfWeek == e.getDay()){
                                 if(d.getDay().isEmpty()){
                                     d.getDay().add(e);
@@ -160,7 +162,7 @@ public class Main {
 
         for(Day d : timeTable.getTimeTable()){
             System.out.println("-----------------------");
-            System.out.println(d.dayOfWeek);
+            System.out.println("The day is: " + d.dayOfWeek);
             for(SchEvent e : d.getDay()){
                 System.out.println(":::::::::::::::::::::");
                 System.out.println(e.getCourse().getId());
@@ -175,5 +177,31 @@ public class Main {
 
 
     }
+
+    static void bubbleSort(Day arr[], int n)
+    {
+        int i, j;
+        Day temp;
+        boolean swapped;
+        for (i = 0; i < n - 1; i++) {
+            swapped = false;
+            for (j = 0; j < n - i - 1; j++) {
+                if (arr[j].numOfEvents < arr[j + 1].numOfEvents) {
+
+                    // Swap arr[j] and arr[j+1]
+                    temp = arr[j];
+                    arr[j] = arr[j + 1];
+                    arr[j + 1] = temp;
+                    swapped = true;
+                }
+            }
+
+            // If no two elements were
+            // swapped by inner loop, then break
+            if (swapped == false)
+                break;
+        }
+    }
+
 
 }
