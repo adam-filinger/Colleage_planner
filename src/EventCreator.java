@@ -32,8 +32,10 @@ public class EventCreator
                 continue;
             }
             day = day(event.get(0).hashCode());
+//            System.out.println(event.get(0).hashCode());
 //            System.out.println(event.toString());
 //            System.out.println(course.getId());
+//            System.out.println(event.get(3).hashCode());
             typ = eventType(event.get(3).hashCode());
             String timeString = (String) event.get(1);
             String[] startAndEndTimes = timeString.split("-");
@@ -47,9 +49,9 @@ public class EventCreator
     return value of type of event (exp. in class schevent), if invalid hash returns 0
      */
     public int eventType(int eventTypHash){
-        if (eventTypHash < 0) {
+        if (eventTypHash == -473185540) {
             return 2;
-        } else if (eventTypHash > 0){
+        } else if (eventTypHash == -1478438803){
             return 1;
         } else{
             return 0;
@@ -63,15 +65,15 @@ public class EventCreator
     public int day(int dayHash){
 
         switch (dayHash){
-            case 1331298713:
+            case 1268528167:
                 return 1;
-            case 395181433:
+            case 204884182:
                 return 2;
-            case 140774534:
+            case -1801241174:
                 return 3;
-            case 1765072423:
+            case 766285814:
                 return 4;
-            case 2026289997:
+            case 80699369:
                 return 5;
         }
 

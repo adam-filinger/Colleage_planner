@@ -1,3 +1,5 @@
+import org.apache.poi.ss.formula.functions.T;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,19 +46,19 @@ public class Main {
 
         //creating schEvents
         //events for marketing
-        java.setSchEvents(creator.createEvents("D:\\Download\\4it101.csv", java));
+        java.setSchEvents(creator.createEvents("exports\\4it101.csv", java));
 
         //events for database
-        ucet.setSchEvents(creator.createEvents("D:\\Download\\1fu201.csv", ucet));
+        ucet.setSchEvents(creator.createEvents("exports\\1fu201.csv", ucet));
 
         //events for economics
-        stateg.setSchEvents(creator.createEvents("D:\\Download\\3sg201.csv", stateg));
+        stateg.setSchEvents(creator.createEvents("exports\\3sg201.csv", stateg));
 
         //events for economics
-        sof_in.setSchEvents(creator.createEvents("D:\\Download\\4it115.csv", sof_in));
+        sof_in.setSchEvents(creator.createEvents("exports\\4it115.csv", sof_in));
 
         //events for economics
-        info.setSchEvents(creator.createEvents("D:\\Download\\4iz210.csv", info));
+        info.setSchEvents(creator.createEvents("exports\\4iz210.csv", info));
 
 
 
@@ -64,7 +66,13 @@ public class Main {
         //creating timetable
         TimeTable timeTable = new TimeTable();
 
+        //define rules
         List<Rule> rules = new ArrayList<>();
+        rules.add(new Rule(0, new Time(7, 30, 0)));
+
+        //events to remove
+        List<SchEvent> remove_events = new ArrayList<>();
+
         timeTable.setRules(rules);
         for(Day d : timeTable.getTimeTable()){
             for (Course c : all_courses){
@@ -72,9 +80,20 @@ public class Main {
                     if(d.dayOfWeek == e.getDay()){
                         d.numOfEvents++;
                     }
+                    for(Rule r : rules){
+                        if(r.getDay() == 0){
+                            if(e.getStart().equals(r.getTime())){
+                                remove_events.add(e);
+                            }
+                        }
+                    }
                 }
             }
             System.out.println("For day: " + d.dayOfWeek + " the number of events is: " + d.numOfEvents);
+        }
+
+        for(SchEvent re : remove_events){
+            re.getCourse().getSchEvents().remove(re);
         }
 
         bubbleSort(timeTable.timeTable, 5);
