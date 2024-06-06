@@ -7,29 +7,9 @@ import java.sql.Time;
 
 public class Main {
 
+    static List<Course> all_courses = new ArrayList<>();
+
     public static void main(String[] args) {
-
-//        Time myTime = new Time(9, 15, 0);
-//        Time secondTime = new Time(12, 30, 0);
-//        System.out.println(myTime.getTime());
-//        System.out.println(secondTime.getTime());
-//        Time thirdtime = new Time(9, 15, 0);
-//        long duration = secondTime.getTime() - myTime.getTime();
-//        System.out.println("-------------------");
-//        System.out.println(duration);
-//        if(thirdtime.before(myTime)){
-//            System.out.println("Can add");
-//        } else if (thirdtime.equals(myTime)) {
-//            System.out.println("Cant add");
-//        } else if (thirdtime.before(secondTime)){
-//            System.out.println("Cannot add");
-//        } else if (thirdtime.after(secondTime)){
-//            System.out.println("Can add");
-//        } else if (thirdtime.equals(secondTime)){
-//            System.out.println("Cant add");
-//        }
-
-        List<Course> all_courses = new ArrayList<>();
 
         //create courses
         Course java = new Course("4IT101");
@@ -70,31 +50,10 @@ public class Main {
         List<Rule> rules = new ArrayList<>();
         rules.add(new Rule(0, new Time(7, 30, 0)));
 
-        //events to remove
-        List<SchEvent> remove_events = new ArrayList<>();
 
         timeTable.setRules(rules);
-        for(Day d : timeTable.getTimeTable()){
-            for (Course c : all_courses){
-                for(SchEvent e : c.getSchEvents()){
-                    if(d.dayOfWeek == e.getDay()){
-                        d.numOfEvents++;
-                    }
-                    for(Rule r : rules){
-                        if(r.getDay() == 0){
-                            if(e.getStart().equals(r.getTime())){
-                                remove_events.add(e);
-                            }
-                        }
-                    }
-                }
-            }
-            System.out.println("For day: " + d.dayOfWeek + " the number of events is: " + d.numOfEvents);
-        }
 
-        for(SchEvent re : remove_events){
-            re.getCourse().getSchEvents().remove(re);
-        }
+        countEvents(timeTable);
 
         bubbleSort(timeTable.timeTable, 5);
 
@@ -112,72 +71,9 @@ public class Main {
         3. Whether the day you want to add a SchEvent to isn't full
         4. Whether the SchEvent you want to add doesn't overlap with SchEvent already in timeTable
          */
-        int courses_added = 0;
 
 
-        while(courses_added != all_courses.size()){
-            for (Course c : all_courses){
-                if(c.lectureAdded && c.practiceAdded){
-                    System.out.println("Course " + c.getId() + " added!");
-                    System.out.println("..................................");
-                    courses_added++;
-                }else{
-                    for(Day d : timeTable.getTimeTable()){
-                    for(SchEvent e : c.getSchEvents()){
-                        if(e.getType() == 1){
-                            if(c.lectureAdded){
-                                continue;
-                            }
-                        } else if (e.getType() == 2) {
-                            if(c.practiceAdded){
-                                continue;
-                            }
-                        }
-//                        if (e.getStart().equals(timeTable.getRules().get(0).getTime())) {
-//                            continue;
-//                        }
-
-                            if(d.dayOfWeek == e.getDay()){
-                                if(d.getDay().isEmpty()){
-                                    d.getDay().add(e);
-                                    if(e.getType() == 1){
-                                        c.setLectureAdded();
-                                    }else{
-                                        c.setPracticeAdded();
-                                    }
-                                }else{
-                                    int matches = 0;
-                                    for(SchEvent d_e : d.getDay()){
-                                        if(d_e.getStart().equals(e.getStart())){
-                                            matches++;
-                                        }
-                                        if(e.getStart().equals(d_e.getEnd())){
-                                            matches++;
-                                        }
-                                        if(e.getStart().before(d_e.getEnd())){
-                                            if(e.getStart().after(d_e.getStart())){
-                                                matches++;
-                                            }
-                                        }
-                                    }
-                                    if(matches == 0){
-                                        d.getDay().add(e);
-                                        if(e.getType() == 1){
-                                            c.setLectureAdded();
-                                        }else{
-                                            c.setPracticeAdded();
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                    }
-                }
-            }
-        }
-
-
+        createTimeTable(timeTable, all_courses);
 
         for(Day d : timeTable.getTimeTable()){
             System.out.println("-----------------------");
@@ -219,6 +115,100 @@ public class Main {
             // swapped by inner loop, then break
             if (swapped == false)
                 break;
+        }
+    }
+
+    public static void createTimeTable(TimeTable timeTable, List<Course> from_courses){
+        int courses_added = 0;
+
+        while(courses_added != from_courses.size()){
+            for (Course c : from_courses){
+                if(c.lectureAdded && c.practiceAdded){
+                    System.out.println("Course " + c.getId() + " added!");
+                    System.out.println("..................................");
+                    courses_added++;
+                }else{
+                    for(Day d : timeTable.getTimeTable()){
+                        for(SchEvent e : c.getSchEvents()){
+                            if(e.getType() == 1){
+                                if(c.lectureAdded){
+                                    continue;
+                                }
+                            } else if (e.getType() == 2) {
+                                if(c.practiceAdded){
+                                    continue;
+                                }
+                            }
+
+                            if(d.dayOfWeek == e.getDay()){
+                                if(d.getDay().isEmpty()){
+                                    d.getDay().add(e);
+                                    if(e.getType() == 1){
+                                        c.setLectureAdded();
+                                    }else{
+                                        c.setPracticeAdded();
+                                    }
+                                }else{
+                                    if(findMatches(d, e) == 0){
+                                        d.getDay().add(e);
+                                        if(e.getType() == 1){
+                                            c.setLectureAdded();
+                                        }else{
+                                            c.setPracticeAdded();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
+
+    }
+
+    public static int findMatches(Day searchDay, SchEvent event){
+        int matches = 0;
+
+        for(SchEvent d_e : searchDay.getDay()){
+            if(d_e.getStart().equals(event.getStart())){
+                matches++;
+            }
+            if(event.getStart().before(d_e.getEnd())){
+                if(event.getStart().after(d_e.getStart())){
+                    matches++;
+                }
+            }
+        }
+
+        return matches;
+    }
+
+    public static void countEvents(TimeTable timeTable){
+        //events to remove
+        List<SchEvent> remove_events = new ArrayList<>();
+
+        for(Day d : timeTable.getTimeTable()){
+            for (Course c : all_courses){
+                for(SchEvent e : c.getSchEvents()){
+                    if(d.dayOfWeek == e.getDay()){
+                        d.numOfEvents++;
+                    }
+                    for(Rule r : timeTable.getRules()){
+                        if(r.getDay() == 0){
+                            if(e.getStart().equals(r.getTime())){
+                                remove_events.add(e);
+                            }
+                        }
+                    }
+                }
+            }
+            System.out.println("For day: " + d.dayOfWeek + " the number of events is: " + d.numOfEvents);
+        }
+
+        for(SchEvent re : remove_events){
+            re.getCourse().getSchEvents().remove(re);
         }
     }
 
