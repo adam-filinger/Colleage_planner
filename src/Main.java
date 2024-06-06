@@ -63,7 +63,7 @@ public class Main {
 
         countEvents(timeTable);
 
-        bubbleSort(timeTable.timeTable, 5);
+        bubbleSort(timeTable.timeTable, 5, true);
 
 
 
@@ -83,6 +83,11 @@ public class Main {
 
         createTimeTable(timeTable, all_courses);
 
+        bubbleSort(timeTable.timeTable, 5, false);
+
+        sortDayEvents(timeTable.timeTable);
+
+
         for(Day d : timeTable.getTimeTable()){
             System.out.println("-----------------------");
             System.out.println("The day is: " + d.dayOfWeek);
@@ -101,29 +106,56 @@ public class Main {
 
     }
 
-    static void bubbleSort(Day arr[], int n)
+
+    /*
+    bolean type ... true means sorting by numOfEvents desc
+    false means sorting by dayOfWeek asc
+     */
+    static void bubbleSort(Day arr[], int n, boolean type)
     {
         int i, j;
         Day temp;
         boolean swapped;
-        for (i = 0; i < n - 1; i++) {
-            swapped = false;
-            for (j = 0; j < n - i - 1; j++) {
-                if (arr[j].numOfEvents < arr[j + 1].numOfEvents) {
+        if(type){
+            for (i = 0; i < n - 1; i++) {
+                swapped = false;
+                for (j = 0; j < n - i - 1; j++) {
+                    if (arr[j].numOfEvents < arr[j + 1].numOfEvents) {
 
-                    // Swap arr[j] and arr[j+1]
-                    temp = arr[j];
-                    arr[j] = arr[j + 1];
-                    arr[j + 1] = temp;
-                    swapped = true;
+                        // Swap arr[j] and arr[j+1]
+                        temp = arr[j];
+                        arr[j] = arr[j + 1];
+                        arr[j + 1] = temp;
+                        swapped = true;
+                    }
                 }
-            }
 
-            // If no two elements were
-            // swapped by inner loop, then break
-            if (swapped == false)
-                break;
+                // If no two elements were
+                // swapped by inner loop, then break
+                if (swapped == false)
+                    break;
+            }
+        }else{
+            for (i = 0; i < n - 1; i++) {
+                swapped = false;
+                for (j = 0; j < n - i - 1; j++) {
+                    if (arr[j].dayOfWeek > arr[j + 1].dayOfWeek) {
+
+                        // Swap arr[j] and arr[j+1]
+                        temp = arr[j];
+                        arr[j] = arr[j + 1];
+                        arr[j + 1] = temp;
+                        swapped = true;
+                    }
+                }
+
+                // If no two elements were
+                // swapped by inner loop, then break
+                if (swapped == false)
+                    break;
+            }
         }
+
     }
 
     public static void createTimeTable(TimeTable timeTable, List<Course> from_courses){
@@ -231,6 +263,36 @@ public class Main {
         for(SchEvent re : remove_events){
             re.getCourse().getSchEvents().remove(re);
         }
+    }
+
+    public static void sortDayEvents(Day timeTable[]){
+        int i, j;
+        int ne;
+        SchEvent temp;
+        boolean swapped;
+        for(Day dayEvents : timeTable){
+            ne = dayEvents.getDay().size();
+            for (i = 0; i < ne - 1; i++) {
+                swapped = false;
+                for (j = 0; j < ne - i - 1; j++) {
+                    if (dayEvents.getDay().get(j).getStart().after(dayEvents.getDay().get(j + 1).getStart())) {
+
+                        temp = dayEvents.getDay().get(j);
+                        dayEvents.getDay().set(j, dayEvents.getDay().get(j + 1));
+                        dayEvents.getDay().set(j + 1, temp);
+                        swapped = true;
+                    }
+                }
+
+                // If no two elements were
+                // swapped by inner loop, then break
+                if (swapped == false)
+                    break;
+            }
+        }
+
+
+
     }
 
 
