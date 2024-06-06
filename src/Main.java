@@ -12,6 +12,12 @@ public class Main {
     public static void main(String[] args) {
 
         //create courses
+        Course thai = new Course("TVSTHA");
+        List<SchEvent> thai_events = new ArrayList<>();
+        thai_events.add(new SchEvent(2, thai, 2, new Time(12, 30, 0), new Time(14, 0, 0)));
+
+        thai.setSchEvents(thai_events);
+        all_courses.add(thai);
         Course java = new Course("4IT101");
         all_courses.add(java);
         Course ucet = new Course("1FU201");
@@ -22,6 +28,8 @@ public class Main {
         all_courses.add(sof_in);
         Course info = new Course("4IZ210");
         all_courses.add(info);
+
+
         EventCreator creator = new EventCreator();
 
         //creating schEvents
@@ -48,8 +56,7 @@ public class Main {
 
         //define rules
         List<Rule> rules = new ArrayList<>();
-        rules.add(new Rule(0, new Time(7, 30, 0)));
-        rules.add(new Rule(1, new Time(18, 0, 0)));
+
 
 
         timeTable.setRules(rules);
@@ -122,7 +129,7 @@ public class Main {
     public static void createTimeTable(TimeTable timeTable, List<Course> from_courses){
         int courses_added = 0;
 
-        while(courses_added != from_courses.size()){
+        while(courses_added < from_courses.size()){
             for (Course c : from_courses){
                 if(c.lectureAdded && c.practiceAdded){
                     System.out.println("Course " + c.getId() + " added!");
@@ -174,6 +181,15 @@ public class Main {
 
         for(SchEvent d_e : searchDay.getDay()){
             if(d_e.getStart().equals(event.getStart())){
+                matches++;
+            }
+            if(d_e.getEnd().equals(event.getStart())){
+                matches++;
+            }
+            if(d_e.getStart().equals(event.getEnd())){
+                matches++;
+            }
+            if(d_e.getEnd().equals(event.getEnd())){
                 matches++;
             }
             if(event.getStart().before(d_e.getEnd())){
