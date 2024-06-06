@@ -49,6 +49,7 @@ public class Main {
         //define rules
         List<Rule> rules = new ArrayList<>();
         rules.add(new Rule(0, new Time(7, 30, 0)));
+        rules.add(new Rule(1, new Time(18, 0, 0)));
 
 
         timeTable.setRules(rules);
@@ -197,6 +198,10 @@ public class Main {
                     }
                     for(Rule r : timeTable.getRules()){
                         if(r.getDay() == 0){
+                            if(e.getStart().equals(r.getTime())){
+                                remove_events.add(e);
+                            }
+                        } else if (r.getDay() == e.getDay()) {
                             if(e.getStart().equals(r.getTime())){
                                 remove_events.add(e);
                             }
