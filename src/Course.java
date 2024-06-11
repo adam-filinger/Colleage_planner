@@ -7,6 +7,7 @@ public class Course {
     public List<SchEvent> schEvents;
     public boolean lectureAdded = false;
     public boolean practiceAdded = false;
+    public boolean added = false;
 
     public Course(String id) {
         this.id = id;
@@ -26,6 +27,7 @@ public class Course {
 
     public void setLectureAdded() {
         this.lectureAdded = true;
+        courseAddedToTable();
     }
 
     /**
@@ -33,5 +35,12 @@ public class Course {
      */
     public void setPracticeAdded() {
         this.practiceAdded = true;
+        courseAddedToTable();
+    }
+
+    public void courseAddedToTable(){
+        if(lectureAdded && practiceAdded){
+            this.added = true;
+        }
     }
 }

@@ -66,21 +66,6 @@ public class Main {
         bubbleSort(timeTable.timeTable, 5, true);
 
 
-
-        /*
-        Naplnit celý timeTable všemi dostupnými rozvrhovými akcemi
-        seřadit
-         */
-
-        /*
-        When creating timeTable you need to check:
-        1. Whether the course has both lecture and practice already added to timeTable
-        2. Whether the course already has lecture/practice added to timeTable
-        3. Whether the day you want to add a SchEvent to isn't full
-        4. Whether the SchEvent you want to add doesn't overlap with SchEvent already in timeTable
-         */
-
-
         createTimeTable(timeTable, all_courses);
 
         bubbleSort(timeTable.timeTable, 5, false);
@@ -161,9 +146,10 @@ public class Main {
     public static void createTimeTable(TimeTable timeTable, List<Course> from_courses){
         int courses_added = 0;
 
+
         while(courses_added < from_courses.size()){
             for (Course c : from_courses){
-                if(c.lectureAdded && c.practiceAdded){
+                if(c.added){
                     System.out.println("Course " + c.getId() + " added!");
                     System.out.println("..................................");
                     courses_added++;
