@@ -147,7 +147,7 @@ public class Main {
         int courses_added = 0;
 
 
-        while(courses_added < from_courses.size()){
+        while(courses_added < from_courses.size() - 1){
             for (Course c : from_courses){
                 if(c.added){
                     System.out.println("Course " + c.getId() + " added!");
