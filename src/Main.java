@@ -24,29 +24,37 @@ public class Main {
         all_courses.add(ucet);
         Course stateg = new Course("3SG201");
         all_courses.add(stateg);
-        Course sof_in = new Course("4IT115");
-        all_courses.add(sof_in);
+        Course aj = new Course("2AJ212");
+        all_courses.add(aj);
+//        Course sof_in = new Course("4IT115");
+//        all_courses.add(sof_in);
         Course info = new Course("4IZ210");
         all_courses.add(info);
 
 
         EventCreator creator = new EventCreator();
 
+
         //creating schEvents
-        //events for marketing
+        //events for java
         java.setSchEvents(creator.createEvents("exports\\4it101.csv", java));
 
-        //events for database
+        //events for aj
+        aj.setSchEvents(creator.createEvents("exports\\2aj212.csv", aj));
+
+
+        //events for ucetnictvi
         ucet.setSchEvents(creator.createEvents("exports\\1fu201.csv", ucet));
 
-        //events for economics
+        //events for strategics
         stateg.setSchEvents(creator.createEvents("exports\\3sg201.csv", stateg));
 
-        //events for economics
-        sof_in.setSchEvents(creator.createEvents("exports\\4it115.csv", sof_in));
+        //events for software engineering
+//        sof_in.setSchEvents(creator.createEvents("exports\\4it115.csv", sof_in));
 
-        //events for economics
+        //events for informations
         info.setSchEvents(creator.createEvents("exports\\4iz210.csv", info));
+
 
 
 
@@ -145,9 +153,10 @@ public class Main {
 
     public static void createTimeTable(TimeTable timeTable, List<Course> from_courses){
         int courses_added = 0;
+        boolean all_courses_added = false;
 
 
-        while(courses_added < from_courses.size() - 1){
+        while(!all_courses_added){
             for (Course c : from_courses){
                 if(c.added){
                     System.out.println("Course " + c.getId() + " added!");
@@ -188,6 +197,14 @@ public class Main {
                         }
 
                     }
+                }
+            }
+            for(Course ac : all_courses){
+                if(!(ac.added)){
+                    all_courses_added = false;
+                    return;
+                }else{
+                    all_courses_added = true;
                 }
             }
         }

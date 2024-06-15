@@ -9,13 +9,14 @@ import java.util.List;
 public class EventCreator
 {
 
-    ArrayList<List> records = new ArrayList();
+
     int day = 1;
     int typ = 1;
     Time start;
     Time end;
 
     public List<SchEvent> createEvents(String path, Course course){
+        ArrayList<List> records = new ArrayList();
         List<SchEvent> schEvents = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(
                 path))) {
@@ -27,14 +28,18 @@ public class EventCreator
         } catch (IOException e) {
             e.printStackTrace();
         }
+//        System.out.println(course.getId());
+//        System.out.println("....................");
         for (List event: records){
+//            System.out.println(event.toString());
+
             if(event.get(0).equals("Den")){
                 continue;
             }
             day = day(event.get(0).hashCode());
+//            System.out.println(course.getId());
 //            System.out.println(event.get(0).hashCode());
 //            System.out.println(event.toString());
-//            System.out.println(course.getId());
 //            System.out.println(event.get(3).hashCode());
             typ = eventType(event.get(3).hashCode());
             String timeString = (String) event.get(1);
@@ -50,9 +55,9 @@ public class EventCreator
      */
     public int eventType(int eventTypHash){
         if (eventTypHash == -473185540) {
-            return 2;
-        } else if (eventTypHash == -1478438803){
             return 1;
+        } else if (eventTypHash == -1478438803){
+            return 2;
         } else{
             return 0;
         }
